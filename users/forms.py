@@ -2,9 +2,34 @@ from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import Profile,skill,Message
+from django.core.validators import RegexValidator
+from django import forms
 
 
 class CustomUserCreationForm(UserCreationForm):
+    username = forms.CharField(
+        label="username",
+        max_length=30,
+        validators=[
+            RegexValidator(
+                regex=r'^[a-zA-Z]+$',
+                message='Username may only contain alphabets',
+                code='invalid_username'
+            )
+        ]
+    )
+    first_name = forms.CharField(
+        label="Name",
+        max_length=30,
+        validators=[
+            RegexValidator(
+                regex=r'^[a-zA-Z\s]+$',
+                message='First name may only contain alphabets and spaces.',
+                code='invalid_first_name'
+            )
+        ]
+    )
+
     class Meta:
         model = User
         fields = ["first_name","email","username","password1","password2"]
